@@ -197,9 +197,7 @@
     /* Modals */
     .modalBackdrop{
       position:fixed; inset:0;
-     background: #ffffff;
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
+      background: #ffffff; /* hides the grid behind */
       display:none;
       align-items:center;
       justify-content:center;
@@ -337,26 +335,28 @@
     <div class="modal questionModal">
       <div class="heartIcon" aria-hidden="true">
         <svg viewBox="0 0 24 24">
-          <path d="M12 21s-7-4.5-9.5-9C.5 8.5 2.5 6 5.5 6c1.7 0 3.2.9 4 2.2C10.3 6.9 11.8 6 13.5 6c3 0 5 2.5 3 6-2.5 4.5-9.5 9-9.5 9Z"
-                fill="#5a0016"/>
+          <path d="M12 21s-7-4.5-9.5-9C.5 8.5 2.5 6 5.5 6c1.7 0 3.2.9 4 2.2C10.3 6.9 11.8 6 13.5 6c3 0 5 2.5 3 6-2.5 4.5-9.5 9-9.5 9Z" fill="#5a0016"/>
         </svg>
       </div>
       <div class="questionText">Would you do me the honour of being my Valentine?</div>
-<div class="row">
-  <button id="yesBtn1" class="primary">Yes</button>
-  <button id="yesBtn2" class="primary">Yes</button>
-</div>
-<!-- YES POPUP MODAL -->
-<div id="yesBackdrop" class="modalBackdrop" role="dialog" aria-modal="true">
-  <div class="modal questionModal">
-    <div class="questionText">
-      Sharam Karo, You will only click a button Yes? Come give me a kiss and then answer
-    </div>
-    <div class="row">
-      <button id="yesCloseBtn" class="primary">Close</button>
+      <div class="row">
+        <button id="yesBtn1" class="primary">Yes</button>
+        <button id="yesBtn2" class="primary">Yes</button>
+      </div>
     </div>
   </div>
-</div>
+
+  <!-- YES POPUP MODAL -->
+  <div id="yesBackdrop" class="modalBackdrop" role="dialog" aria-modal="true">
+    <div class="modal questionModal">
+      <div class="questionText">
+        Sharam Karo, You will only click a button Yes? Come give me a kiss and then answer
+      </div>
+      <div class="row">
+        <button id="yesCloseBtn" class="primary">Close</button>
+      </div>
+    </div>
+  </div>
 
   <!-- INTRO MODAL (shows on load) -->
   <div id="introBackdrop" class="modalBackdrop" role="dialog" aria-modal="true" style="display:flex;">
@@ -421,12 +421,7 @@
 
     function $(id){ return document.getElementById(id); }
     function setStatus(msg){ $("status").textContent = msg; }
-
-    // ✅ FIXED: removed escaping so template literal works in real JS
-    function getCellEl(r,c){
-      return document.querySelector(`.cell[data-r="${r}"][data-c="${c}"]`);
-    }
-
+    function getCellEl(r,c){ return document.querySelector(`.cell[data-r="${r}"][data-c="${c}"]`); }
     function escapeHtml(s){
       return (s||"").replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
     }
@@ -565,7 +560,6 @@
             inp.addEventListener("input", ()=> {
               inp.value = (inp.value || "").toUpperCase().replace(/[^A-Z]/g,"");
 
-              // SMART: remove red slash only when correct
               const typed = (inp.value || "").toUpperCase();
               const correct = STATE.solution[r][c];
 
@@ -812,7 +806,6 @@
           const inp = el.querySelector("input.letter");
           const val = (inp.value || "").toUpperCase();
 
-          // IMPORTANT: don't wipe wrong unless correct
           el.classList.remove("correct");
 
           if(val) filled++;
@@ -823,8 +816,6 @@
           } else if(val && val === solution[r][c]){
             el.classList.remove("wrong");
             el.classList.add("correct");
-          } else {
-            // empty cell: leave wrong as-is (or not), but do NOT mark correct
           }
         }
       }
@@ -865,14 +856,18 @@
     function showQuestionModal(){ $("questionBackdrop").style.display = "flex"; }
     function closeQuestionModal(){ $("questionBackdrop").style.display = "none"; }
 
+    function showYesModal(){
+      closeQuestionModal();               // closes Valentine popup
+      $("yesBackdrop").style.display = "flex";
+    }
+    function closeYesModal(){ $("yesBackdrop").style.display = "none"; }
+
     function closeIntroModal(){ $("introBackdrop").style.display = "none"; }
 
-    // ---------------- STARTUP (safe) ----------------
+    // ---------------- STARTUP ----------------
     document.addEventListener("DOMContentLoaded", () => {
-      // build puzzle
       buildFromFixed();
 
-      // hooks (safe checks so NOTHING can crash)
       $("checkBtn")?.addEventListener("click", ()=>check(true));
       $("clearBtn")?.addEventListener("click", clearAll);
 
@@ -884,16 +879,13 @@
         showQuestionModal();
       });
 
-      function showYesModal(){ $("yesBackdrop").style.display = "flex"; }
-function closeYesModal(){ $("yesBackdrop").style.display = "none"; }
+      $("yesBtn1")?.addEventListener("click", showYesModal);
+      $("yesBtn2")?.addEventListener("click", showYesModal);
 
-$("yesBtn1")?.addEventListener("click", showYesModal);
-$("yesBtn2")?.addEventListener("click", showYesModal);
-
-$("yesCloseBtn")?.addEventListener("click", closeYesModal);
-$("yesBackdrop")?.addEventListener("click", (e)=>{
-  if(e.target.id === "yesBackdrop") closeYesModal();
-});
+      $("yesCloseBtn")?.addEventListener("click", closeYesModal);
+      $("yesBackdrop")?.addEventListener("click", (e)=>{
+        if(e.target.id === "yesBackdrop") closeYesModal();
+      });
 
       $("questionBackdrop")?.addEventListener("click", (e)=>{
         if(e.target.id === "questionBackdrop") closeQuestionModal();
@@ -915,6 +907,3 @@ $("yesBackdrop")?.addEventListener("click", (e)=>{
   </script>
 </body>
 </html>
-
-
-
