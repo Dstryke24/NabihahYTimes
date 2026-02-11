@@ -342,11 +342,21 @@
         </svg>
       </div>
       <div class="questionText">Would you do me the honour of being my Valentine?</div>
-      <div class="row">
-        <button id="questionCloseBtn" class="primary">Close</button>
-      </div>
+<div class="row">
+  <button id="yesBtn1" class="primary">Yes</button>
+  <button id="yesBtn2" class="primary">Yes</button>
+</div>
+<!-- YES POPUP MODAL -->
+<div id="yesBackdrop" class="modalBackdrop" role="dialog" aria-modal="true">
+  <div class="modal questionModal">
+    <div class="questionText">
+      Sharam Karo, You will only click a button Yes? Come give me a kiss and then answer
+    </div>
+    <div class="row">
+      <button id="yesCloseBtn" class="primary">Close</button>
     </div>
   </div>
+</div>
 
   <!-- INTRO MODAL (shows on load) -->
   <div id="introBackdrop" class="modalBackdrop" role="dialog" aria-modal="true" style="display:flex;">
@@ -895,4 +905,5 @@
   </script>
 </body>
 </html>
+
 
