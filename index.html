@@ -884,7 +884,17 @@
         showQuestionModal();
       });
 
-      $("questionCloseBtn")?.addEventListener("click", closeQuestionModal);
+      function showYesModal(){ $("yesBackdrop").style.display = "flex"; }
+function closeYesModal(){ $("yesBackdrop").style.display = "none"; }
+
+$("yesBtn1")?.addEventListener("click", showYesModal);
+$("yesBtn2")?.addEventListener("click", showYesModal);
+
+$("yesCloseBtn")?.addEventListener("click", closeYesModal);
+$("yesBackdrop")?.addEventListener("click", (e)=>{
+  if(e.target.id === "yesBackdrop") closeYesModal();
+});
+
       $("questionBackdrop")?.addEventListener("click", (e)=>{
         if(e.target.id === "questionBackdrop") closeQuestionModal();
       });
@@ -905,5 +915,6 @@
   </script>
 </body>
 </html>
+
 
 
