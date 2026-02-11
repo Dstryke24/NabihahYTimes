@@ -411,7 +411,12 @@
 
     function $(id){ return document.getElementById(id); }
     function setStatus(msg){ $("status").textContent = msg; }
-    function getCellEl(r,c){ return document.querySelector(\`.cell[data-r="\${r}"][data-c="\${c}"]\`); }
+
+    // ✅ FIXED: removed escaping so template literal works in real JS
+    function getCellEl(r,c){
+      return document.querySelector(`.cell[data-r="${r}"][data-c="${c}"]`);
+    }
+
     function escapeHtml(s){
       return (s||"").replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
     }
